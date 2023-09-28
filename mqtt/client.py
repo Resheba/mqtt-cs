@@ -39,10 +39,15 @@ class MQTTClient:
             self,
             *,
             client_id: str,
+            username: str = None,
+            password: str = None,
             sub_topics: list[tuple[str, int]] = None # [('server/connect', 0)]
             ) -> None:
         self.client_id: str = client_id.strip()
         self.mqtt_client: Client = Client(client_id=self.client_id)
+        if username or password:
+            self.mqtt_client.username_pw_set(username=username, password=password)
+
         self.mqtt_client.on_connect = self.on_connect
         self.mqtt_client.on_message = self.on_message
         self.mqtt_client.on_disconnect = self.on_disconnect
